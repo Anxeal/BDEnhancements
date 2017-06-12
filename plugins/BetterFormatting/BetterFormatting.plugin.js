@@ -5,12 +5,14 @@ var BetterFormatting = function() {};
 BetterFormatting.prototype.replaceList = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}";
 BetterFormatting.prototype.smallCapsList = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`ᴀʙᴄᴅᴇғɢʜɪᴊᴋʟᴍɴᴏᴘǫʀsᴛᴜᴠᴡxʏᴢ{|}";
 BetterFormatting.prototype.superscriptList = " !\"#$%&'⁽⁾*⁺,⁻./⁰¹²³⁴⁵⁶⁷⁸⁹:;<⁼>?@ᴬᴮᶜᴰᴱᶠᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾQᴿˢᵀᵁⱽᵂˣʸᶻ[\\]^_`ᵃᵇᶜᵈᵉᶠᵍʰᶦʲᵏˡᵐⁿᵒᵖᑫʳˢᵗᵘᵛʷˣʸᶻ{|}";
-BetterFormatting.prototype.upsideDownList = " ¡\"#$%⅋,)(*+'-˙/0ƖᄅƐㄣϛ9ㄥ86:;>=<¿@∀qƆpƎℲפHIſʞ˥WNOԀQɹS┴∩ΛMX⅄Z]\\[^‾,ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz}|{";
+BetterFormatting.prototype.upsideDownList = " ¡\"#$%⅋,)(*+'-˙/0ƖᄅƐㄣϛ9ㄥ86:;>=<¿@∀qƆpƎℲפHIſʞ˥WNOԀQɹS┴∩ΛMX⅄Z]\\[^‾,ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz}|{".split("");
+BetterFormatting.prototype.upsideDownList[2] = ",,";
 BetterFormatting.prototype.fullwidthList = "　！＂＃＄％＆＇（）＊＋，－．／０１２３４５６７８９：；＜＝＞？＠ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺ［＼］＾＿｀ａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ｛｜｝";
+BetterFormatting.prototype.emojiList = " ❕\"#️⃣$%&'()✳️➕,➖./0️⃣1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣8️⃣9️⃣:;<=>❔@🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿[\\]🔼_`🇦🇧🇨🇩🇪🇫🇬🇭🇮🇯🇰🇱🇲🇳🇴🇵🇶🇷🇸🇹🇺🇻🇼🇽🇾🇿{|}";
 
-BetterFormatting.prototype.toolbarString = "<div class='bf-toolbar'><div><b>Bold</b></div><div><i>Italic</i></div><div><u>Underline</u></div><div><s>Strikethrough</s></div><div style='font-family:monospace;'>Code</div><div>ˢᵘᵖᵉʳˢᶜʳᶦᵖᵗ</div><div>SᴍᴀʟʟCᴀᴘs</div><div>Ｆｕｌｌｗｉｄｔｈ</div><div>uʍopǝpᴉsd∩</div></div></div>";
+BetterFormatting.prototype.toolbarString = "<div class='bf-toolbar'><div><b>Bold</b></div><div><i>Italic</i></div><div><u>Underline</u></div><div><s>Strikethrough</s></div><div style='font-family:monospace;'>Code</div><div>ˢᵘᵖᵉʳˢᶜʳᶦᵖᵗ</div><div>SᴍᴀʟʟCᴀᴘs</div><div>Ｆｕｌｌｗｉｄｔｈ</div><div>uʍopǝpᴉsd∩</div><div>Emoji</div></div></div>";
 
-BetterFormatting.prototype.wrappers = ["**", "*", "__", "~~", "`", "^", "%", "#", "&"];
+BetterFormatting.prototype.wrappers = ["**", "*", "__", "~~", "`", "^", "%", "#", "&", ";"];
 
 BetterFormatting.prototype.format = function(e) {
     if (e.shiftKey || e.which != 13) return;
@@ -99,6 +101,26 @@ BetterFormatting.prototype.format = function(e) {
                     i = next - 2;
                 }
                 break;
+            case ";":
+                console.log("test");
+                if (text[i - 1] == "\\") {
+                    console.log("1");
+                    text = text.substring(0, i - 1) + text.substring(i--);
+                    break;
+                }
+                var next = text.indexOf(";", i + 1);
+                if (next != -1) {
+                    console.log("2");
+                    text = text.replace(new RegExp(`([^]{${i}})\\^([^]*)\\^([^]{${len - next - 1}})`), (match, before, middle, after) => {
+                        middle = middle.replace(/./g, letter => {
+                            var index = bf.replaceList.indexOf(letter);
+                            return index != -1 ? bf.emojiList[index] : letter;
+                        })
+                        return before + middle + after;
+                    });
+                    i = next - 2;
+                }
+                break;
         }
     }
     $textarea.val(text);
@@ -135,7 +157,7 @@ BetterFormatting.prototype.addToolbar = function($textarea) {
         .on("keypress.betterformatting", this.format)
         .on("focus.betterformatting", this.showToolbar)
         .on("blur.betterformatting", this.hideToolbar)
-        .parent().after(this.toolbarString)
+        .parent().before(this.toolbarString)
         .siblings(".bf-toolbar")
         .on("mousemove.betterformatting", (e) => {
             $this = $(e.currentTarget);
