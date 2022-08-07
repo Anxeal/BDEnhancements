@@ -1,3 +1,7 @@
+# DEPRECATED
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+No maintenance or support will be provided.
+
 # BDEnchancements
 A collections of BetterDiscord Enchancements made by Anxeal (hey, that's me!)
 
